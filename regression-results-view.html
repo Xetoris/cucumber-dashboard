@@ -1,9 +1,13 @@
 <link rel="import" href="./bower_components/polymer/polymer.html">
-<link rel="import" href="./bower_components/core-icons/core-icons.html">
-<link rel="import" href="./bower_components/core-icon-button/core-icon-button.html">
+<link rel="import" href="./bower_components/core-icon/core-icon.html">
+<link rel="import" href="./bower_components/core-menu/core-menu.html">
 <link rel="import" href="./bower_components/core-toolbar/core-toolbar.html">
 <link rel="import" href="./bower_components/core-animated-pages/core-animated-pages.html">
 <link rel="import" href="./bower_components/paper-shadow/paper-shadow.html">
+<link rel="import" href="./bower_components/paper-dropdown/paper-dropdown.html">
+<link rel="import" href="./bower_components/paper-item/paper-item.html">
+<link rel="import" href="./bower_components/paper-menu-button/paper-menu-button.html">
+<link rel="import" href="./bower_components/paper-icon-button/paper-icon-button.html">
 
 <polymer-element name="regression-results-widget">
   <template>
@@ -25,25 +29,32 @@
       background-color: white;
     }
 
-    #feature-cards .card {
+    #scenario-cards {
+      height: 100%;
+      width: 100%;
+    }
+
+    #scenario-cards .card {
       width: 100%;
       height: 100%;
+      cursor: pointer;
     }
 
-    #feature-cards .card .name {
+    #scenario-cards .card .name {
       font-size: 25px;
       padding-left: 5px;
+      padding-top: 10px;
     }
 
-    #feature-cards .card .status {
+    #scenario-cards .card .status {
       position: absolute;
       right: 0px;
-      top: 0px;
-      height: 60%;
+      top: 25%;
+      height: 50%;
       width: 10%;
     }
 
-    #feature-cards .card .tags {
+    #scenario-cards .card .tags {
       position: absolute;
       left: 0px;
       bottom: 5px;
@@ -52,11 +63,60 @@
       color: blue;
     }
 
+    .scenario-view-section{
+      height: 90%;
+      min-height: 500px;
+    }
+
+    .scenario-view-section .fade-wrapper{
+      height: 100%;
+      width: 100%;
+    }
+
+    .scenario-view-wrapper{
+      width: 80%;
+      height: 100%;
+      min-height: 200px;
+      margin-left: auto;
+      margin-right: auto;
+      padding-top: 5px;
+      padding-bottom: 5px;
+      background-color: white;
+    }
+
+    .scenario-view {
+      width: 100%;
+      height: 100%;
+    }
+
+    .scenario-view .name {
+      font-size: 25px;
+      padding-left: 5px;
+      padding-top: 10px;
+    }
+
+    .scenario-view .tags {
+      position: absolute;
+      left: 0px;
+      bottom: 5px;
+      font-size: 12px;
+      padding-left: 5px;
+      color: blue;
+    }
+
+    .scenario-view .status {
+      position: absolute;
+      right: 0px;
+      top: 10px;
+      height: 50px;
+      width: 50px;
+    }
+
     .passed-regression {
       background-color: #B2FF59;
     }
 
-    .passed-feature {
+    .passed-scenario {
       color: #64DD17;
     }
 
@@ -64,7 +124,7 @@
       background-color: #FF8A80;
     }
 
-    .failed-feature {
+    .failed-scenario {
       color: #D50000;
     }
 
@@ -73,51 +133,114 @@
       color: white;
     }
 
+    #filter-menu-dropdown{
+      color: black;
+      font-size: 15px;
+    }
+
+    #filter-menu-dropdown paper-item{
+      opacity: .7;
+      transition: opacity 200ms;
+    }
+
+    #filter-menu-dropdown paper-item:hover{
+      opacity: 1;
+    }
+
     core-animated-pages{
       background-color: #EEEEEE;
     }
 
+    #debug-window{
+      border: 1px solid;
+      position: absolute;
+      width: 200px;
+      height: 100px;
+      bottom: 10px;
+      right: 10px;
+      background-color: white;
+    }
+
+    #debug-window div{
+      padding-left: 5px;
+    }
+
+    #debug-window #title{
+      font-weight: bold;
+    }
   </style>
   <!-- class="{{regressionPassed? 'passed-regression' : 'failed-regression'}}" -->
   <core-toolbar>
-    <core-icon-button icon="{{selectedId === 0? 'menu' : 'arrow-back'}}" on-tap="{{clearSelected}}"></core-icon-button>
-    <div flex>Regression Result</div>
-    <div>Debug: Selected = {{selectedId}}</div>
+    <paper-menu-button relative hidden?="{{selectedId != 0}}" noink>
+      <paper-icon-button id="menu" icon="menu"></paper-icon-button>
+      <paper-dropdown id="menu-dropdown" class="dropdown">
+      </paper-dropdown>
+    </paper-menu-button>
+    <div relative hidden?="{{selectedId === 0}}">
+      <paper-icon-button id="back-button" icon="arrow-back" on-tap="{{clearSelected}}"></paper-icon-button>
+    </div>
+    <div flex>Feature: {{featureName}}</div>
+    <paper-menu-button relative noink>
+      <paper-icon-button id="filter-menu" icon="filter-list"></paper-icon-button>
+      <paper-dropdown id="filter-menu-dropdown" class="dropdown" transition="" valign="top" halign="right">
+        <core-menu layout vertical selected="0">
+          <paper-item on-tap="{{showAllStatuses}}">Show All</paper-item>
+          <paper-item on-tap="{{hideFailedResults}}">Only Passed</paper-item>
+          <paper-item on-tap="{{hidePassedResults}}">Only Failed</paper-item>
+        </core-menu>
+      </paper-dropdown>
+    </paper-menu-button>
   </core-toolbar>
   <core-animated-pages id="results" flex transitions="cross-fade-all hero-transition" selected="{{selectedId}}">
-    <section vertical layout>
-      <div id="feature-cards" cross-fade>
-        <template repeat="{{feature in features}}">
-          <paper-shadow z="1" class="card-wrapper">
-          <div class="card" hero-id="{{feature.featureId}}" hero?="{{selectedId === 0 || selectedId === feature.featureId}}" on-tap="{{selectFeature}}">
-            <div class="name">{{feature.name}}</div>
-            <core-icon class="status {{feature.status == 'Passed'? 'passed-feature':'failed-feature'}}" icon="{{feature.status == 'Passed'? 'check' : 'close'}}"></core-icon>
-            <div class="tags">{{feature.tags}}</div>
-          </div>
-        </paper-shadow>
+    <section class="scenario-cards-section">
+      <div id="scenario-cards" cross-fade>
+        <template repeat="{{scenario in scenarios}}">
+          <paper-shadow z="1" class="card-wrapper" hidden?="{{(hideFailedScenarios && scenario.status == 'Failed') || (hidePassedScenarios && scenario.status == 'Passed')}}" layout vertical>
+            <div class="card" flex hero-id="{{scenario.id}}" hero?="{{selectedId === 0 || selectedId === scenario.id}}" on-tap="{{selectScenario}}">
+              <div class="name">{{scenario.name}}</div>
+              <core-icon class="status {{scenario.status == 'Passed'? 'passed-scenario':'failed-scenario'}}" icon="{{scenario.status == 'Passed'? 'check' : 'close'}}"></core-icon>
+              <div class="tags">{{scenario.tags}}</div>
+            </div>
+          </paper-shadow>
         </template>
       </div>
     </section>
-    <template repeat="{{feature in features}}">
-      <section class="feature-view" hero-id="{{feature.featureId}}" hero?="{{selectedId === 0 || selectedId === feature.featureId}}" layout vertical>
+    <template repeat="{{scenario in scenarios}}">
+      <section class="scenario-view-section" vertical layout>
         <div class="fade-wrapper" cross-fade>
-          <div class="name">{{feature.name}}</div>
-          <div class="status">{{feature.status}}</div>
-          <div class="tags">{{feature.tags}}</div>
+          <paper-shadow z="1" class="scenario-view-wrapper">
+            <div class="scenario-view" hero-id="{{scenario.id}}" hero?="{{selectedId === 0 || selectedId === scenario.id}}" layout vertical>
+              <div class="name">{{scenario.name}}</div>
+              <core-icon class="status {{scenario.status == 'Passed'? 'passed-scenario':'failed-scenario'}}" icon="{{scenario.status == 'Passed'? 'check' : 'close'}}"></core-icon>
+              <div class="logs">
+              </div>
+              <div class="tags">{{scenario.tags}}</div>
+            </div>
+          </paper-shadow>
         </div>
       </section>
     </template>
   </core-animated-pages>
+  <paper-shadow id="debug-window" hidden?="{{!enableDebug}}" z="5">
+    <div id="title">Debug Information</div>
+    <div>Selected: {{selectedId}}</div>
+    <div>Hide Failed: {{hideFailedScenarios}}</div>
+    <div>Hide Passed: {{hidePassedScenarios}}</div>
+  </paper-shadow>
 </template>
 <script>
 Polymer({
-  features: [],
+  enableDebug: true,
   selectedId: 0,
+  hideFailedScenarios: false,
+  hidePassedScenarios: false,
+  scenarios: [],
+  featureName: 'Prospects',
   ready: function(){
     this.loadData();
   },
-  selectFeature: function(e){
-    this.selectedId = e.target.templateInstance.model.feature.featureId;
+  selectScenario: function(e){
+    this.selectedId = e.target.templateInstance.model.scenario.id;
     console.log('Selected: ' + this.selectedId);
   },
   clearSelected: function(){
@@ -126,11 +249,26 @@ Polymer({
       this.selectedId = 0;
     }
   },
+  hideFailedResults: function(){
+    console.log('Hiding Failed.');
+    this.hideFailedScenarios = true;
+    this.hidePassedScenarios = false;
+  },
+  hidePassedResults: function(){
+    console.log('Hiding Passed.');
+    this.hidePassedScenarios = true;
+    this.hideFailedScenarios = false;
+  },
+  showAllStatuses: function(){
+    console.log('Showing All Statuses.');
+    this.hideFailedScenarios = false;
+    this.hidePassedScenarios = false;
+  },
   regressionPass: function(){
     var passed = true;
 
-    for(i = 0; i < features.length; i++){
-      if(features[i].status == 'Failed'){
+    for(i = 0; i < scenarios.length; i++){
+      if(scenarios[i].status == 'Failed'){
         passed = false;
         break;
       }
@@ -139,35 +277,11 @@ Polymer({
     return passed;
   },
   loadData: function(){
-    this.features = new Array({
-      featureId: 1,
-      name: 'Linux.TMS.Onboarding.Basic',
-      tags: ['@it-wasnt-my-fault','@dont-blame-me'],
-      status: 'Failed'
-    },{
-      featureId: 2,
-      name: 'Linux.TMS.Onboarding.Advanced',
-      tags: ['@not-real','@imaginary','@made-up', '@quarantined'],
-      status: 'Passed'
-    },{
-      featureId: 3,
-      name: 'Linux.TMS.Everify.DuplicateCase',
-      tags: ['@not-real','@imaginary','@made-up', '@quarantined'],
-      status: 'Passed'
-    },{
-      featureId: 4,
-      name: 'Linux.Jobseeker.Events.Registration',
-      tags: ['@not-real','@imaginary','@made-up', '@quarantined'],
-      status: 'Passed'
-    },{
-      featureId: 5,
-      name: 'Signin',
-      tags: ['@tms', '@signin'],
-      status: 'Failed',
-      scenarios: new Array({
-        name: 'HiringManager',
+    this.scenarios = new Array({
+        id: 1,
+	      name: 'HiringManagerSignin',
         type: 'Outline',
-        tags: ['@hiringmanager'],
+        tags: ['@hiringmanagersignin,@dark'],
         status: 'Passed',
         steps: new Array({
           stepId: 1,
@@ -176,23 +290,93 @@ Polymer({
           status: 'Passed'
         },{
           stepId: 2,
-          stepText: 'Then I enter value "<InvalidUserName>" into field with id "UserName"',
-          codeLine: 'features/step_definitions/common/controls/generic.rb:121',
+          stepText: 'When I see element with id "UserName"',
+          codeLine: 'features/step_definitions/common/selection_steps.rb:11',
           status: 'Passed',
         },{
           stepId: 3,
-          stepText: 'Then I enter value "<InvalidPassword>" into field with id "Password"',
+          stepText: 'Then I enter value "<InvalidUserName>" into field with id "UserName"',
           codeLine: 'features/step_definitions/common/controls/generic.rb:121',
           status: 'Passed'
         },{
           stepId: 4,
+          stepText: 'When I see element with id "Password"',
+          codeLine: 'features/step_definitions/common/selection_steps.rb:11',
+          status: 'Passed'
+        },{
+          stepId: 5,
+          stepText: 'Then I enter value "<InvalidPassword>" into field with id "Password"',
+          codeLine: 'features/step_definitions/common/controls/generic.rb:121',
+          status: 'Passed'
+        },{
+          stepId: 6,
           stepText: 'Then I click on element with a "name" attribute with value "save"',
           codeLine: 'features/step_definitions/common/controls/generic.rb:88',
           status: 'Passed'
         },{
-          stepId: 5,
-          stepText: 'Then I see something',
-          codeLine: 'features/step_definitions/common/controls/generic.rb:2',
+          stepId: 7,
+          stepText: 'Then I wait 60 seconds to see element with class "form-error"',
+          codeLine: 'features/step_definitions/common/selection_steps.rb:69',
+          status: 'Passed'
+        },{
+          stepId: 8,
+          stepText: 'Then I enter value "<ValidUserName>" into field with id "UserName"',
+          codeLine: 'features/step_definitions/common/controls/generic.rb:121',
+          status: 'Passed'
+        },{
+          stepId: 9,
+          stepText: 'Then I enter value "<InvalidPassword>" into field with id "Password"',
+          codeLine: 'features/step_definitions/common/controls/generic.rb:121',
+          status: 'Passed'
+        },{
+          stepId: 10,
+          stepText: 'Then I click on element with a "name" attribute with value "save"',
+          codeLine: 'features/step_definitions/common/controls/generic.rb:88',
+          status: 'Passed'
+        },{
+          stepId: 11,
+          stepText: 'Then I wait 60 seconds to see element with class "form-error"',
+          codeLine: 'features/step_definitions/common/selection_steps.rb:69',
+          status: 'Passed'
+        },{
+          stepId: 12,
+          stepText: 'Then I enter value "<InvalidUserName>" into field with id "UserName"',
+          codeLine: 'features/step_definitions/common/controls/generic.rb:121',
+          status: 'Passed'
+        },{
+          stepId: 13,
+          stepText: 'Then I enter value "<ValidPassword>" into field with id "Password"',
+          codeLine: 'features/step_definitions/common/controls/generic.rb:121',
+          status: 'Passed'
+        },{
+          stepId: 14,
+          stepText: 'Then I click on element with a "name" attribute with value "save"',
+          codeLine: 'features/step_definitions/common/controls/generic.rb:88',
+          status: 'Passed'
+        },{
+          stepId: 15,
+          stepText: 'Then I wait 60 seconds to see element with class "form-error"',
+          codeLine: 'features/step_definitions/common/selection_steps.rb:69',
+          status: 'Passed'
+        },{
+          stepId: 16,
+          stepText: 'Then I enter value "<ValidUserName>" into field with id "UserName"',
+          codeLine: 'features/step_definitions/common/controls/generic.rb:121',
+          status: 'Passed'
+        },{
+          stepId: 17,
+          stepText: 'Then I enter value "<ValidPassword>" into field with id "Password"',
+          codeLine: 'features/step_definitions/common/controls/generic.rb:121',
+          status: 'Passed'
+        },{
+          stepId: 18,
+          stepText: 'Then I click on element with a "name" attribute with value "save"',
+          codeLine: 'features/step_definitions/common/controls/generic.rb:88',
+          status: 'Passed'
+        },{
+          stepId: 19,
+          stepText: 'Then I wait 60 seconds to see element with id "nav-employees"',
+          codeLine: 'features/step_definitions/common/selection_steps.rb:64',
           status: 'Passed'
         }),
         example: {
@@ -200,59 +384,241 @@ Polymer({
           status: 'Passed'
         }
       },{
-        name: 'HiringManager',
+        id: 2,
+        name: 'HiringManagerSignin',
         type: 'Outline',
-        tags: ['@hiringmanager'],
-        status: 'Failed',
+        tags: ['@hiringmanagersignin,@dark'],
+        status: 'Passed',
         steps: new Array({
           stepId: 1,
           stepText: 'Given I navigate to TMS',
           codeLine: 'features/step_definitions/common/navigation_stebs.rb:7',
-          status: 'Passed',
+          status: 'Passed'
         },{
           stepId: 2,
-          stepText: 'Then I enter value "<InvalidUserName>" into field with id "UserName"',
-          codeLine: 'features/step_definitions/common/controls/generic.rb:121',
+          stepText: 'When I see element with id "UserName"',
+          codeLine: 'features/step_definitions/common/selection_steps.rb:11',
           status: 'Passed',
         },{
           stepId: 3,
-          stepText: 'Then I enter value "<InvalidPassword>" into field with id "Password"',
+          stepText: 'Then I enter value "<InvalidUserName>" into field with id "UserName"',
           codeLine: 'features/step_definitions/common/controls/generic.rb:121',
           status: 'Passed'
         },{
           stepId: 4,
+          stepText: 'When I see element with id "Password"',
+          codeLine: 'features/step_definitions/common/selection_steps.rb:11',
+          status: 'Passed'
+        },{
+          stepId: 5,
+          stepText: 'Then I enter value "<InvalidPassword>" into field with id "Password"',
+          codeLine: 'features/step_definitions/common/controls/generic.rb:121',
+          status: 'Passed'
+        },{
+          stepId: 6,
           stepText: 'Then I click on element with a "name" attribute with value "save"',
           codeLine: 'features/step_definitions/common/controls/generic.rb:88',
           status: 'Passed'
         },{
-          stepId: 5,
-          stepText: 'Then I see something',
-          codeLine: 'features/step_definitions/common/controls/generic.rb:2',
-          status: 'Failed',
-          exception: {
-            exceptionText: 'Unable to find css "#nav-employees" (Capybara::ElementNotFound)',
-            stackTrace: 'C:/Ruby200/lib/ruby/gems/2.0.0/gems/capybara-2.4.4/lib/capybara/node/finders.rb:41:in `block in find' +
-            'C:/Ruby200/lib/ruby/gems/2.0.0/gems/capybara-2.4.4/lib/capybara/node/base.rb:84:in `synchronize' +
-            'C:/Ruby200/lib/ruby/gems/2.0.0/gems/capybara-2.4.4/lib/capybara/node/finders.rb:30:in `find' +
-            'C:/Ruby200/lib/ruby/gems/2.0.0/gems/capybara-2.4.4/lib/capybara/session.rb:676:in `block (2 levels) in ' +
-            'C:/Ruby200/lib/ruby/gems/2.0.0/gems/capybara-2.4.4/lib/capybara/dsl.rb:51:in `block (2 levels) in ' +
-            'C:/Git/cucumber-web/features/step_definitions/common/selection_steps.rb:54:in `block in ' +
-            'C:/Ruby200/bin/cucumber:23:in `load' +
-            'C:/Ruby200/bin/cucumber:23:in `' +
-            'C:/Ruby200/lib/ruby/gems/2.0.0/gems/ruby-debug-ide-0.4.23.beta1/lib/ruby-debug-ide.rb:86:in `debug_load' +
-            'C:/Ruby200/lib/ruby/gems/2.0.0/gems/ruby-debug-ide-0.4.23.beta1/lib/ruby-debug-ide.rb:86:in `debug_program' +
-            'C:/Ruby200/lib/ruby/gems/2.0.0/gems/ruby-debug-ide-0.4.23.beta1/bin/rdebug-ide:110:in `' +
-            '-e:1:in `load\'' +
-            '-e:1:in \'' +
-            'C:\\Git\\cucumber-web\\features\\tms\\signin.feature:23:in \'Then I wait 60 seconds to see element with id "nav-employees"\''
-          }
+          stepId: 7,
+          stepText: 'Then I wait 60 seconds to see element with class "form-error"',
+          codeLine: 'features/step_definitions/common/selection_steps.rb:69',
+          status: 'Passed'
+        },{
+          stepId: 8,
+          stepText: 'Then I enter value "<ValidUserName>" into field with id "UserName"',
+          codeLine: 'features/step_definitions/common/controls/generic.rb:121',
+          status: 'Passed'
+        },{
+          stepId: 9,
+          stepText: 'Then I enter value "<InvalidPassword>" into field with id "Password"',
+          codeLine: 'features/step_definitions/common/controls/generic.rb:121',
+          status: 'Passed'
+        },{
+          stepId: 10,
+          stepText: 'Then I click on element with a "name" attribute with value "save"',
+          codeLine: 'features/step_definitions/common/controls/generic.rb:88',
+          status: 'Passed'
+        },{
+          stepId: 11,
+          stepText: 'Then I wait 60 seconds to see element with class "form-error"',
+          codeLine: 'features/step_definitions/common/selection_steps.rb:69',
+          status: 'Passed'
+        },{
+          stepId: 12,
+          stepText: 'Then I enter value "<InvalidUserName>" into field with id "UserName"',
+          codeLine: 'features/step_definitions/common/controls/generic.rb:121',
+          status: 'Passed'
+        },{
+          stepId: 13,
+          stepText: 'Then I enter value "<ValidPassword>" into field with id "Password"',
+          codeLine: 'features/step_definitions/common/controls/generic.rb:121',
+          status: 'Passed'
+        },{
+          stepId: 14,
+          stepText: 'Then I click on element with a "name" attribute with value "save"',
+          codeLine: 'features/step_definitions/common/controls/generic.rb:88',
+          status: 'Passed'
+        },{
+          stepId: 15,
+          stepText: 'Then I wait 60 seconds to see element with class "form-error"',
+          codeLine: 'features/step_definitions/common/selection_steps.rb:69',
+          status: 'Passed'
+        },{
+          stepId: 16,
+          stepText: 'Then I enter value "<ValidUserName>" into field with id "UserName"',
+          codeLine: 'features/step_definitions/common/controls/generic.rb:121',
+          status: 'Passed'
+        },{
+          stepId: 17,
+          stepText: 'Then I enter value "<ValidPassword>" into field with id "Password"',
+          codeLine: 'features/step_definitions/common/controls/generic.rb:121',
+          status: 'Passed'
+        },{
+          stepId: 18,
+          stepText: 'Then I click on element with a "name" attribute with value "save"',
+          codeLine: 'features/step_definitions/common/controls/generic.rb:88',
+          status: 'Passed'
+        },{
+          stepId: 19,
+          stepText: 'Then I wait 60 seconds to see element with id "nav-employees"',
+          codeLine: 'features/step_definitions/common/selection_steps.rb:64',
+          status: 'Passed'
         }),
         example: {
-          inputs:['TestUser', 'TestPassword', 'abdonqobe', 'apib380w'],
+          inputs: new Array('TestUser2', 'TestPassword', 'abdonqobe', 'apib380w'),
           status: 'Passed'
         }
-      })
-    });
+      },{
+          id: 3,
+          name: 'TerminatedCannotLogin',
+          type: 'Regular',
+          tags: ['@terminatedcannotlogin'],
+          status: 'Failed',
+          steps: new Array({
+            stepId: 1,
+            stepText: 'Given I navigate to TMS',
+            codeLine: 'features/step_definitions/common/navigation_stebs.rb:7',
+            status: 'Passed'
+          },{
+            stepId: 2,
+            stepText: 'Then I create a new employee for organization "QADoNotTouch.Onboarding.Organization" and the "Basic Feature" location',
+            codeLine: 'features/step_definitions/tms/employee_steps.rb:1',
+            status: 'Passed',
+          },{
+            stepId: 3,
+            stepText: 'Then I wait for 40 seconds',
+            codeLine: 'features/step_definitions/common/general_steps.rb:1',
+            status: 'Passed'
+          },{
+            stepId: 4,
+            stepText: 'Then I navigate to the registration url sent to the new employee',
+            codeLine: 'features/step_definitions/tms/employee_steps.rb:72',
+            status: 'Passed'
+          },{
+            stepId: 5,
+            stepText: 'Then I enter value "testing" into field with id "Password"',
+            codeLine: 'features/step_definitions/common/controls/generic.rb:121',
+            status: 'Passed'
+          },{
+            stepId: 6,
+            stepText: 'Then I enter value "testing" into field with id "ConfirmPassword"',
+            codeLine: 'features/step_definitions/common/controls/generic.rb:121',
+            status: 'Passed'
+          },{
+            stepId: 7,
+            stepText: 'Then I click on element with a class of "sign-in-btn"',
+            codeLine: 'features/step_definitions/common/controls/generic.rb:78',
+            status: 'Passed'
+          },{
+            stepId: 8,
+            stepText: 'Then I enter value "testing" into field with id "securityAnswer1"',
+            codeLine: 'features/step_definitions/common/controls/generic.rb:121',
+            status: 'Passed'
+          },{
+            stepId: 9,
+            stepText: 'Then I enter value "testing" into field with id "securityAnswer2"',
+            codeLine: 'features/step_definitions/common/controls/generic.rb:121',
+            status: 'Passed'
+          },{
+            stepId: 10,
+            stepText: 'Then I click on element with a class of "saveSecurityQuestions"',
+            codeLine: 'features/step_definitions/common/controls/generic.rb:78',
+            status: 'Passed'
+          },{
+            stepId: 11,
+            stepText: 'Then I click on element with type "a" and text "Start next item"',
+            codeLine: 'features/step_definitions/common/controls/generic.rb:95',
+            status: 'Passed'
+          },{
+            stepId: 12,
+            stepText: 'Then I click on element with type "a" and text "Sign Out"',
+            codeLine: 'features/step_definitions/common/controls/generic.rb:95',
+            status: 'Passed'
+          },{
+            stepId: 13,
+            stepText: 'Then I navigate to the main site',
+            codeLine: 'features/step_definitions/common/navigation_steps.rb:27',
+            status: 'Passed'
+          },{
+            stepId: 14,
+            stepText: 'Then I enter value "QaDoNotTouch.Manager" into field with id "UserName"',
+            codeLine: 'features/step_definitions/common/controls/generic.rb:121',
+            status: 'Passed'
+          },{
+            stepId: 15,
+            stepText: 'Then I enter value "password1" into field with id "Password"',
+            codeLine: 'features/step_definitions/common/controls/generic.rb:121',
+            status: 'Passed'
+          },{
+            stepId: 16,
+            stepText: 'Then I click on element with a class of "sign-in-btn"',
+            codeLine: 'features/step_definitions/common/controls/generic.rb:78',
+            status: 'Passed'
+          },{
+            stepId: 17,
+            stepText: 'Then I navigate to the employee details page',
+            codeLine: 'features/step_definitions/tms/employee_steps.rb:88',
+            status: 'Passed'
+          },{
+            stepId: 18,
+            stepText: 'Then I click on element with a "href" attribute with value "employeenew/terminate"',
+            codeLine: 'features/step_definitions/common/controls/generic.rb:88',
+            status: 'Passed'
+          },{
+            stepId: 19,
+            stepText: 'Then I wait for 10 seconds',
+            codeLine: 'features/step_definitions/common/general_steps.rb:1',
+            status: 'Passed'
+          },{
+            stepId: 20,
+            stepText: 'Then I enter today\'s date into field "TerminationDate"',
+            codeLine: 'features/step_definitions/common/controls/textbox.rb:84',
+            status: 'Failed',
+            exception: {
+              note: 'Unable to find field "TerminationDate" (Capybara::ElementNotFound)',
+              stack: new Array(
+                './features/step_definitions/common/controls/textbox.rb:95:in `fill_in_cache_or_field\'',
+                './features/step_definitions/common/controls/textbox.rb:89:in `/^I enter today\'s date into (field|cache) "(.*?)"$/\'',
+                'features/tms/signin.feature:57:in `Then I enter today\'s date into field "TerminationDate"\''
+              ),
+            }
+          },{
+            stepId: 21,
+            stepText: 'Then I click on element with a id of "rehire-yes"',
+            codeLine: 'features/step_definitions/common/controls/generic.rb:78',
+            status: 'Skipped'
+          },{
+            stepId: 22,
+            stepText: 'Then I enter value "Termination Test" into field with id "Notes"',
+            codeLine: 'features/step_definitions/common/controls/generic.rb:121',
+            status: 'Skipped'
+          }),
+          example: {
+            inputs: new Array('TestUser', 'TestPassword', 'abdonqobe', 'apib380w'),
+            status: 'Passed'
+          }
+        });
   }
 });
 </script>
