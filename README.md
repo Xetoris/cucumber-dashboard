@@ -1,7 +1,7 @@
 # polymer-cucumber-formatter
 Cucumber formatter that utilizes Google Polymer
 
-# Status: Work In Process
+# Status: Work In Progress
 
 Utilizes Polymer for the generated HTML formatting. Find more about it here: https://www.polymer-project.org/ .
 
