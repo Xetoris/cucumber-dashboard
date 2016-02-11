@@ -1,12 +1,10 @@
-# polymer-cucumber-formatter
-Cucumber formatter that utilizes Google Polymer
+# cucumber-dashboard
+A dashboard for cucumber test results that utilizes a special cucumber formatter output.
 
 # Status: Work In Progress
 
-Utilizes Polymer for the generated HTML formatting. Find more about it here: https://www.polymer-project.org/ .
-
-Utilizes bower for Polymer resources. Find more info about installing bower here: http://bower.io/ .
-
-Built to replace default html formatter shipped with Cucumber. Find more info about it here: http://cukes.info/
-
-This specific repository will hold the Ruby binding implementation once it is complete.
+# Goals:
+1) Reads data from data source (Mongo, json, etc)
+2) Presents the data in a testing dashboard.
+3) Dashboard tries to stay clean while presenting as much data as possible.
+4) Uses the Hanami architecture. (http://hanamirb.org/)
