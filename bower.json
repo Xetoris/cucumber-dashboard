@@ -1,0 +1,24 @@
+{
+  "name": "Dashboard",
+  "authors": [
+    "xetoris <cmccord4pa@gmail.com>"
+  ],
+  "description": "Dashboard for Cucumber results",
+  "main": "",
+  "moduleType": [],
+  "license": "MIT",
+  "homepage": "",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "jquery": "^2.2.0",
+    "bootstrap": "v4.0.0-alpha.2",
+    "tether": "^1.1.1"
+  }
+}

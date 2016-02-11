@@ -1,2 +1,8 @@
 bower_components/
 .idea
+/public/assets*
+/tmp
+.env.*
+source.json
+Gemfile.lock
+node_modules
