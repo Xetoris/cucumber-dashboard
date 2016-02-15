@@ -1,3 +1,10 @@
+require 'mongoid'
+
 class Feature
-  attr :tags, :source, :name, :description
+  include Mongoid::Document
+
+  field :tgs, as: :tags, type: Array
+  field :src, as: :source, type: String
+  field :nm, as: :name, type: String
+  field :dcr, as: :description, type: String
 end
