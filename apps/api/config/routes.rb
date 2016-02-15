@@ -2,5 +2,5 @@
 # See: http://www.rubydoc.info/gems/hanami-router/#Usage
 
 get '/regressions', ''
-get '/runs', ''
-get '/tests', ''
+get '/executions', ''
+get '/features', ''
