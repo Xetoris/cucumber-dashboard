@@ -1,5 +1,5 @@
 class FeatureRep
-  attr_reader :tags, :source, :name, :description, :id
+  attr_accessor :tags, :source, :name, :description, :id
 
   def initialize(params={})
     @id = params[:id] if params.has_key?(:id)
@@ -9,17 +9,19 @@ class FeatureRep
     @description = params[:description] if params.has_key?(:description)
   end
 
-  def populate_from_model(feature)
-    @id = feature._id.to_s
+  def self.populate_from_model(feature)
+    model = FeatureRep.new
+
+    model.id = feature._id.to_s
 
     unless feature.tgs.nil? || feature.tgs.empty?
-      @tags = feature.tgs
+      model.tags = feature.tgs
     end
 
-    @name = feature.nm unless feature.nm.nil?
-    @source = feature.src unless feature.src.nil?
-    @description = feature.dcr unless feature.dcr.nil?
+    model.name = feature.nm unless feature.nm.nil?
+    model.source = feature.src unless feature.src.nil?
+    model.description = feature.dcr unless feature.dcr.nil?
 
-    self
+    model
   end
 end
