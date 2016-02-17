@@ -11,12 +11,12 @@ class MongoRepository
 
   # We create a representation of the Mongo entity to limit access to Mongo to the Repository level.
   def get_result_array(mongo_result)
-    mongo_result.map{|ftr| @obj_type.populate_from_model(ftr)}
+    mongo_result.map{|ftr| @obj_type.new.populate_from_model(ftr)}
   end
 
   # We create a representation of the Mongo entity to limit access to Mongo to the Repository level.
   def get_result(mongo_result)
-    @obj_type.populate_from_model(mongo_result)
+    @obj_type.new.populate_from_model(mongo_result)
   end
 
   private

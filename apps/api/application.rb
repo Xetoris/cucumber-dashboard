@@ -16,7 +16,7 @@ module Api
       # Relative load paths where this application will recursively load the code.
       # When you add new directories, remember to add them here.
       #
-      load_paths << []
+      load_paths << %w(./controllers/features/ ./controllers/executions/)
 
       # Handle exceptions with HTTP statuses (true) or don't catch them (false).
       # Defaults to true.
@@ -105,11 +105,11 @@ module Api
 
       # The layout to be used by all views
       #
-      layout :application # It will load Api::Views::ApplicationLayout
+      #layout :application # It will load Api::Views::ApplicationLayout
 
       # The relative path to templates
       #
-      templates 'templates'
+      #templates 'templates'
 
       ##
       # ASSETS
@@ -217,8 +217,8 @@ module Api
       #
       # See: http://www.rubydoc.info/gems/hanami-view#Configuration
       view.prepare do
-        include Hanami::Helpers
-        include Api::Assets::Helpers
+        #  include Hanami::Helpers
+        #  include Api::Assets::Helpers
       end
     end
 

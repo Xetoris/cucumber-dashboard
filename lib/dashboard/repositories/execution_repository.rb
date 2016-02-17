@@ -8,14 +8,14 @@ class ExecutionRepository < MongoRepository
   end
 
   def get_executions
-    get_result_array(Execution.all)
+    get_result_array(Execution.all.without(:scs))
   end
 
   def get_executions_by_feature_name(name)
-    get_result_array(Execution.where('ftr.name' => name))
+    get_result_array(Execution.where('ftr.name' => name).without(:scs))
   end
 
-  def get_execution(id)
+  def get_execution_by_id(id)
     get_result(Execution.find(id))
   end
 end

@@ -1,7 +1,6 @@
 require 'rubygems'
 require 'bundler/setup'
 require 'hanami/setup'
-require_relative '../lib/dashboard'
 require_relative '../apps/api/application'
 require_relative '../apps/web/application'
 

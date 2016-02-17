@@ -16,6 +16,6 @@ class FeatureRepository < MongoRepository
   end
 
   def get_feature_by_id(id)
-    get_result_array(Feature.find(id))
+    get_result(Feature.find(id))
   end
 end
