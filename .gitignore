@@ -1,8 +1,23 @@
-bower_components/
+# Generated
 .idea
-/public/assets*
-/tmp
-.env.*
-source.json
 Gemfile.lock
+
+# 3rd Party
+bower_components/
 node_modules
+
+# CSS
+apps/web/assets/stylesheets/*.css
+
+# Javascripts
+apps/web/assets/javascripts/*.js
+
+# Web Server Assets
+/public/assets*
+
+# Env Config
+.env.*
+
+# Other
+/tmp
+source.json
