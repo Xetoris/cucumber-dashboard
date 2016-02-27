@@ -1,0 +1,7 @@
+<div id="features-wrapper">
+  <div class="list-group">
+    <% features.each do |feature| %>
+      <a href="<%= routes.features_path %>/<%= feature['id'] %>" class="list-group-item"><%= feature['name']%></a>
+    <% end %>
+  </div>
+</div>
