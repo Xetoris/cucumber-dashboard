@@ -6,6 +6,7 @@ var config = {
     bootstrapDir: './bower_components/bootstrap',
     jqueryDir: './bower_components/jquery',
     tetherDir: './bower_components/tether',
+    faDir: './bower_components/font-awesome',
     assetDir: './apps/web/assets/',
     sourceDir: './apps/web/sources/'
 };
@@ -35,5 +36,16 @@ gulp.task('js', function(){
             .pipe(gulp.dest(config.assetDir + '/javascripts'));
 });
 
+gulp.task('icons', function(){
+   return gulp.src(config.faDir + '/fonts/**.*')
+       .pipe(gulp.dest(config.assetDir + '/fonts'));
+});
+
+gulp.task('watch-css', function(){
+    gulp.watch(config.sourceDir + '/stylesheets/**.*css', ['css']);
+});
+
+
 gulp.task('default', ['css', 'js']);
-gulp.task('full-build', ['clean-css', 'clean-js', 'css', 'js']);
+gulp.task('watch', ['watch-css']);
+gulp.task('full-build', ['clean-css', 'clean-js', 'css', 'js', 'icons']);

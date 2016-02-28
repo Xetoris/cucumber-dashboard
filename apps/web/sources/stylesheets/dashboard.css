@@ -1,5 +1,6 @@
 @import 'variables';
 @import 'bootstrap';
+@import 'features';
 
 html, body {
     width: 100%;
@@ -15,9 +16,6 @@ body {
     flex-grow:1;
 }
 
-#features-wrapper{
-    flex-grow:1;
-}
 
 #greeting-box{
     flex-grow: 1;
