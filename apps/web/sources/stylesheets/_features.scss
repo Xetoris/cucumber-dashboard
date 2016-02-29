@@ -27,16 +27,19 @@
       .list-group-item{
         display: flex;
         flex-direction: row;
+        justify-content: space-between;
 
-        div {
-          flex-grow: 1;
+        .feature-name {
+          flex: 1 0 25%;
         }
 
         .feature-status {
+          flex: 1 0 10%;
           text-align: center;
         }
 
         .feature-icon {
+          flex: 1 0 25%;
           text-align: right;
         }
       }

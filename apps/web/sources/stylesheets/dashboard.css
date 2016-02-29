@@ -1,6 +1,7 @@
 @import 'variables';
 @import 'bootstrap';
 @import 'features';
+@import 'navbar';
 
 html, body {
     width: 100%;
