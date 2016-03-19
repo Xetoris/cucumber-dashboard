@@ -1,9 +1,13 @@
 {
-  "name": "polymer-formatter",
-  "version": "0.0.0",
-  "description": "Polymer formatter for cucumber",
-  "main": "index.html",
+  "name": "Dashboard",
+  "authors": [
+    "xetoris <cmccord4pa@gmail.com>"
+  ],
+  "description": "Dashboard for Cucumber results",
+  "main": "",
+  "moduleType": [],
   "license": "MIT",
+  "homepage": "",
   "private": true,
   "ignore": [
     "**/.*",
@@ -13,6 +17,9 @@
     "tests"
   ],
   "dependencies": {
-    "polymer": "Polymer/polymer#~0.5.4"
+    "jquery": "^2.2.0",
+    "bootstrap": "v4.0.0-alpha.2",
+    "tether": "^1.1.1",
+    "font-awesome": "fontawesome#^4.5.0"
   }
 }
