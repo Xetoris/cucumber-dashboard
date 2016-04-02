@@ -2,6 +2,7 @@
 @import 'bootstrap';
 @import 'features';
 @import 'navbar';
+@import 'font-awesome';
 
 html, body {
     width: 100%;
