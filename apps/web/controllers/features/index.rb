@@ -3,12 +3,12 @@ require_relative '../../utility/api_helper'
 module Web::Controllers::Features
   class Index
     include Web::Action
-    include Web::Utility::ApiHelper
+    #include Web::Utility::ApiHelper
 
-    expose :features
+    #expose :features
 
     def call(params)
-      @features = JSON.parse(api_get('features'))
+      #@features = JSON.parse(api_get('features'))
     end
   end
 end

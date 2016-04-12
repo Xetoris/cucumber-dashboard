@@ -1,20 +1,18 @@
 var FeatureTable = React.createClass({
     getInitialState: function(){
-        return { features: [
-            {
-                name: 'Test',
-                id: 999,
-                status: 'failed'
-            },
-            {
-                name: 'Test2',
-                id: 998,
-                status: 'passed'
-            } ] }
+        return { features: [] }
+    },
+    componentDidMount: function() {
+        this.featureRequest = $.get(this.props.apiroute, function(result){
+            this.setState({ features: $.makeArray(result) });
+        }.bind(this))
+    },
+    componentWillUnmount: function() {
+      this.featureRequest.abort();
     },
     getFeatureRows: function() {
       return this.state.features.map(function(object, i){
-          return <FeatureRow id={object.id} name={object.name} status={object.status} key={object.id} />
+          return <FeatureRow id={object.id} name={object.name} status={object.status} key={i} />
       });
     },
     render: function() {
@@ -36,9 +34,9 @@ var FeatureRow = React.createClass({
         var statusIcon = null;
 
         if(this.props.status.toLowerCase() == 'passed') {
-            statusIcon = 'thumbs-up'
+            statusIcon = 'thumbs-up';
         } else {
-            statusIcon = 'thumbs-down'
+            statusIcon = 'thumbs-down';
         }
 
         return statusIcon;
@@ -56,4 +54,4 @@ var FeatureRow = React.createClass({
     }
 });
 
-ReactDOM.render(<FeatureTable />, document.getElementById('features-content'));
+ReactDOM.render(<FeatureTable apiroute = 'http://localhost:3085/api/features'/>, document.getElementById('features-content'));

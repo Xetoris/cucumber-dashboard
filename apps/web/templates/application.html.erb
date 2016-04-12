@@ -7,7 +7,7 @@
   <meta http-equiv="x-ua-compatible" content="ie=edge">
 
   <%= stylesheet 'dashboard' %>
-  <%= javascript 'react', 'react-dom' %>
+  <%= javascript 'react', 'react-dom', 'jquery.min' %>
 
 </head>
 <body>
@@ -15,6 +15,6 @@
 <%= yield %>
 
 <!-- jQuery first, then Bootstrap JS. -->
-<%= javascript 'jquery.min', 'tether.min', 'bootstrap.min' %>
+<%= javascript 'tether.min', 'bootstrap.min' %>
 </body>
 </html>
