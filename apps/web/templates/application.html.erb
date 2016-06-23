@@ -1,19 +1,23 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <!-- Required meta tags always come first -->
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <head>
+    <!-- Required meta tags always come first -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
 
-  <%= stylesheet 'dashboard' %>
+    <title>Quality Dashboard</title>
+    <%= favicon %>
 
-</head>
-<body>
+    <!-- Site CSS -->
+    <%= stylesheet '/stylesheets/app.css' %>
+  </head>
+  <body>
+    <div id="main-content" class="container-fluid">
+      <%= yield %>
+    </div>
 
-<%= yield %>
-
-<!-- jQuery first, then Bootstrap JS. -->
-<%= javascript 'jquery.min', 'tether.min', 'bootstrap.min' %>
-</body>
+    <!-- JQuery + Javascript -->
+    <%= javascript '/javascripts/jquery.min.js' %>
+  </body>
 </html>

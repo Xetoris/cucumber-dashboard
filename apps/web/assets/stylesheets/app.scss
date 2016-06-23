@@ -1,0 +1,24 @@
+/* Import Bootstrap */
+@import "bootstrap-flex";
+
+/* Font Awesome */
+@import "font-awesome";
+
+/* App CSS */
+@import "components/navigation/navigation";
+
+
+body, html {
+  height: 100%;
+  width: 100%;
+}
+
+#main-content {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+#main-content > .row {
+  flex-grow: 1;
+}

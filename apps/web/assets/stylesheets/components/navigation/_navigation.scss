@@ -1,0 +1,56 @@
+/* make sidebar nav vertical */
+@include media-breakpoint-up(md) {
+  #navigation {
+    padding-left: 0;
+    padding-right: 0;
+    display: flex;
+    flex-direction: column;
+
+    .side-nav {
+      flex-grow: 1;
+
+      .navbar {
+        border-radius: 0;
+        padding-left: 0;
+        padding-right: 0;
+        flex-grow: 1;
+
+        #nav-content {
+          padding: 0;
+          max-height: none;
+
+          .nav-item {
+            border-bottom: 2px solid #3d4042;
+          }
+        }
+
+        ul {
+          float: none;
+          display: block;
+
+          li {
+            float: none;
+            a {
+              padding-top: 12px;
+              padding-bottom: 12px;
+
+              i {
+                margin-left: 30px;
+                padding-right: 10px;
+                border-right: solid 2px black;
+              }
+
+              .nav-text {
+                padding-left: 10px;
+              }
+            }
+          }
+        }
+
+        .nav-item+.nav-item {
+          margin-left: 0;
+        }
+      }
+    }
+  }
+}

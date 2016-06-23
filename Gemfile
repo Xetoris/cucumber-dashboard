@@ -2,14 +2,12 @@ source 'https://rubygems.org'
 
 gem 'bundler'
 gem 'rake'
-gem 'hanami',       '0.7.0'
-gem 'mongo', '~> 2.1'
-gem 'mongoid', '~> 5.1.0'
-gem 'rest-client'
+gem 'hanami',       '0.7.3'
+gem 'hanami-model', '~> 0.5'
 
 
 group :test do
-  gem 'rspec'
+  gem 'minitest'
   gem 'capybara'
 end
 

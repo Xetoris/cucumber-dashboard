@@ -50,7 +50,7 @@ module Web
       # Argument: An object coercible to integer, default to 80 if the scheme is http and 443 if it's https
       # This SHOULD be configured only in case the application listens to that non standard ports
       #
-       port 3085
+      # port 443
 
       # Enable cookies
       # Argument: boolean to toggle the feature
@@ -130,7 +130,7 @@ module Web
         # See: http://hanamirb.org/guides/assets/compressors
         #
         # In order to skip JavaScript compression comment the following line
-        #javascript_compressor :builtin
+        javascript_compressor :builtin
 
         # Stylesheet compressor
         #
@@ -143,7 +143,7 @@ module Web
         # See: http://hanamirb.org/guides/assets/compressors
         #
         # In order to skip stylesheet compression comment the following line
-        #stylesheet_compressor :builtin
+        stylesheet_compressor :builtin
 
         # Specify sources for assets
         #
