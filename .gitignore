@@ -1,26 +1,16 @@
 # Generated
-.idea
-Gemfile.lock
+.idea/
 
 # 3rd Party
 bower_components/
-node_modules
-
-# CSS
-apps/web/assets/stylesheets/*.css
-
-# Javascripts
-apps/web/assets/javascripts/*.js
-
-# Fonts
-apps/web/assets/fonts/[fF]*.*
+node_modules/
 
 # Web Server Assets
-/public/assets*
+public/
 
 # Env Config
 .env.*
 
 # Other
-/tmp
+tmp/
 source.json

@@ -1,6 +1,0 @@
-development:
-  clients:
-    default:
-      database: cucumber-dashboard
-      hosts:
-        - localhost:29999
