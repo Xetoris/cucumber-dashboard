@@ -2,7 +2,8 @@ source 'https://rubygems.org'
 
 gem 'bundler'
 gem 'rake'
-gem 'hanami', '~>0.8'
+gem 'hanami', '~> 0.8'
+gem 'mongo', '~> 2.2'
 
 group :development do
   gem 'shotgun'
