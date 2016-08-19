@@ -16,7 +16,7 @@ module Api
       # Relative load paths where this application will recursively load the code.
       # When you add new directories, remember to add them here.
       #
-      load_paths << %w(./controllers/features/ ./controllers/executions/)
+      load_paths << %w(./controllers/runs/)
 
       # Handle exceptions with HTTP statuses (true) or don't catch them (false).
       # Defaults to true.

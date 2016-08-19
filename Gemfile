@@ -4,6 +4,8 @@ gem 'bundler'
 gem 'rake'
 gem 'hanami', '~> 0.8'
 gem 'mongo', '~> 2.2'
+gem 'rest-client'
+gem 'faker'
 
 group :development do
   gem 'shotgun'
