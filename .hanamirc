@@ -1,3 +1,4 @@
 architecture=container
 test=rspec
 template=erb
+project=cucumber-dashboard

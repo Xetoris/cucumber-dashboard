@@ -14,6 +14,7 @@ GEM
     diff-lcs (1.2.5)
     domain_name (0.5.20160615)
       unf (>= 0.0.5, < 1.0.0)
+    dotenv (2.1.1)
     dry-configurable (0.1.7)
       concurrent-ruby (~> 1.0)
     dry-container (0.3.4)
@@ -93,6 +94,7 @@ GEM
     mini_portile2 (2.1.0)
     mongo (2.3.0)
       bson (~> 4.1)
+    multi_json (1.12.1)
     netrc (0.11.0)
     nokogiri (1.6.8)
       mini_portile2 (~> 2.1.0)
@@ -137,9 +139,11 @@ PLATFORMS
 DEPENDENCIES
   bundler
   capybara
+  dotenv (~> 2.0)
   faker
   hanami (~> 0.8)
   mongo (~> 2.2)
+  multi_json
   rake
   rest-client
   rspec

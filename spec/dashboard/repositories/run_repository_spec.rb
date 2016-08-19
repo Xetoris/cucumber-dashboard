@@ -17,6 +17,7 @@ RSpec.describe Dashboard::Repositories::RunRepository do
 
     model = Dashboard::Entities::Run.new
 
+    model.create_date = Time.now
     model.name = 'Test Scenario'
     model.feature = 'Test Feature'
     model.status = 'passed'
@@ -42,6 +43,7 @@ RSpec.describe Dashboard::Repositories::RunRepository do
 
       model = Dashboard::Entities::Run.new
 
+      model.create_date = Time.now
       model.name = "#{ Faker::Company.buzzword } Scenario"
       model.feature = "#{ Faker::Company.buzzword } Feature"
       model.status = 'passed'
@@ -66,6 +68,32 @@ RSpec.describe Dashboard::Repositories::RunRepository do
       expect(retrieved.steps).to eq(@stored_model.steps)
     end
 
+    it 'can retrieve runs' do
+      retrieved = @client.get_runs
+
+      expect(retrieved.count).to be > 0
+    end
+
+    it 'can retrieve sorted desc' do
+      retrieved = @client.get_runs('desc')
+
+      expect(retrieved.count).to be > 0
+
+      sorted = retrieved.sort { |x,y| y.create_date <=> x.create_date }.collect { |x| x.id }
+
+      expect(retrieved.collect{ |x| x.id }).to eq(sorted)
+    end
+
+    it 'can retrieve sorted asc' do
+      retrieved = @client.get_runs('asc')
+
+      expect(retrieved.count).to be > 0
+
+      sorted = retrieved.sort { |x,y| x.create_date <=> y.create_date }.collect { |x| x.id }
+
+      expect(retrieved.collect{ |x| x.id }).to eq(sorted)
+    end
+
     it 'can search by name' do
       retrieved = @client.get_runs_by_name(@stored_model.name)
 
@@ -78,6 +106,20 @@ RSpec.describe Dashboard::Repositories::RunRepository do
 
       expect(retrieved.count).to be > 0
       expect(retrieved.find{ |run| run.id == @stored_model.id }).to_not be nil
+    end
+
+    it 'can return a list of distinct names' do
+      test_names = @client.get_run_names
+
+      expect(test_names.count).to be > 0
+      expect(test_names.find{ |name| name == @stored_model.name }).to_not be nil
+    end
+
+    it 'can return a list of distinct features' do
+      test_names = @client.get_run_features
+
+      expect(test_names.count).to be > 0
+      expect(test_names.find{ |name| name == @stored_model.feature }).to_not be nil
     end
   end
 end

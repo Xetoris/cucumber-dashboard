@@ -1,4 +1,5 @@
 require 'mongo'
+require_relative '../entities/run'
 
 module Dashboard
   module Repositories
@@ -31,6 +32,29 @@ module Dashboard
         translate_from_mongo(results.first, Dashboard::Entities::Run)
       end
 
+      def get_runs(sort_date_direction = 'desc', start_number = 0, count = 25)
+        sort_value = sort_date_direction == 'desc' ? -1 : 1
+
+         opts = {
+             :sort => { ctd: sort_value },
+             :limit => count
+         }
+
+        if start_number > 0
+          opts[:skip] = start_number - 1
+        end
+
+        collection = @client[@repository_name].find({}, opts)
+
+        results = []
+
+        collection.each do |document|
+          results.push(translate_from_mongo(document, Dashboard::Entities::Run))
+        end
+
+        results
+      end
+
       def get_runs_by_name(name)
         raise ('Name must be a non-empty/nil String.') if name.nil? || name.empty? || !name.is_a?(String)
 
@@ -57,6 +81,14 @@ module Dashboard
         end
 
         results
+      end
+
+      def get_run_features
+        @client[@repository_name].find.distinct(:ftr)
+      end
+
+      def get_run_names
+        @client[@repository_name].find.distinct(:nm)
       end
 
       private
@@ -91,6 +123,7 @@ module Dashboard
         model = Dashboard::Entities::Run.new
 
         model.id = data[:_id].to_s
+        model.create_date = data[:ctd]
         model.name = data[:nm]
         model.feature = data[:ftr]
         model.status = data[:sts]
@@ -125,6 +158,7 @@ module Dashboard
       def run_to_mongo(run)
         model = {
                   :_id => run.id,
+                  :ctd => run.create_date.utc,
                   :nm => run.name,
                   :ftr => run.feature,
                   :sts => run.status
