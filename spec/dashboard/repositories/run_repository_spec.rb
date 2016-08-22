@@ -18,8 +18,8 @@ RSpec.describe Dashboard::Repositories::RunRepository do
     model = Dashboard::Entities::Run.new
 
     model.create_date = Time.now
-    model.name = 'Test Scenario'
-    model.feature = 'Test Feature'
+    model.name = "#{ Faker::Company.buzzword } Scenario"
+    model.feature = "#{ Faker::Company.buzzword } Feature"
     model.status = 'passed'
     model.tags = %w(@tag1 @tag_test)
     model.steps = [step_model]
@@ -75,7 +75,7 @@ RSpec.describe Dashboard::Repositories::RunRepository do
     end
 
     it 'can retrieve sorted desc' do
-      retrieved = @client.get_runs('desc')
+      retrieved = @client.get_runs(sort_options: {:direction => 'desc'})
 
       expect(retrieved.count).to be > 0
 
@@ -85,7 +85,7 @@ RSpec.describe Dashboard::Repositories::RunRepository do
     end
 
     it 'can retrieve sorted asc' do
-      retrieved = @client.get_runs('asc')
+      retrieved = @client.get_runs(sort_options: {:direction => 'asc'})
 
       expect(retrieved.count).to be > 0
 
@@ -95,14 +95,14 @@ RSpec.describe Dashboard::Repositories::RunRepository do
     end
 
     it 'can search by name' do
-      retrieved = @client.get_runs_by_name(@stored_model.name)
+      retrieved = @client.get_runs(filter_options: {:nm => @stored_model.name})
 
       expect(retrieved.count).to be > 0
       expect(retrieved.find{ |run| run.id == @stored_model.id }).to_not be nil
     end
 
     it 'can search by feature name' do
-      retrieved = @client.get_runs_by_name(@stored_model.name)
+      retrieved = @client.get_runs(filter_options: {:ftr => @stored_model.feature})
 
       expect(retrieved.count).to be > 0
       expect(retrieved.find{ |run| run.id == @stored_model.id }).to_not be nil

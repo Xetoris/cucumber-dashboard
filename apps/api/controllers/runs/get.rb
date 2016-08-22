@@ -1,4 +1,4 @@
-require 'json'
+require 'multi_json'
 require_relative '../../../../lib/dashboard/repositories/run_repository'
 
 module Api::Controllers::Runs
@@ -6,7 +6,7 @@ module Api::Controllers::Runs
     include Api::Action
 
     def call(params)
-      self.body = Dashboard::Repositories::RunRepository.new.get_run(params[:id]).to_json
+      self.body = MultiJson.dump(Dashboard::Repositories::RunRepository.new.get_run(params[:id]))
     end
   end
 end

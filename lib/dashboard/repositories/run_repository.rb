@@ -8,6 +8,16 @@ module Dashboard
       def initialize
         @client = Mongo::Client.new(ENV['MONGO_CONNECTION_STRING'])
         @repository_name = :runs
+        @sort_options = {
+            :direction => 'desc',
+            :start_number => 0,
+            :count => 25
+        }
+
+        @filter_options = {
+            :ftr => nil,
+            :nm => nil
+        }
       end
 
       def add_run(run)
@@ -32,47 +42,19 @@ module Dashboard
         translate_from_mongo(results.first, Dashboard::Entities::Run)
       end
 
-      def get_runs(sort_date_direction = 'desc', start_number = 0, count = 25)
-        sort_value = sort_date_direction == 'desc' ? -1 : 1
+      def get_runs(sort_options: {}, filter_options: {})
+        @sort_options.merge!(sort_options){ |key, o_val, n_val| n_val.nil? ? o_val : n_val }
+        @filter_options.merge!(filter_options)
 
-         opts = {
-             :sort => { ctd: sort_value },
-             :limit => count
-         }
+        @filter_options.delete_if{ |key, value| value.nil? }
 
-        if start_number > 0
-          opts[:skip] = start_number - 1
-        end
+        opts = {
+            :sort => { ctd: @sort_options[:direction] == 'desc' ? -1 : 1 },
+            :limit => @sort_options[:count],
+            :skip => @sort_options[:start_number] > 0 ? @sort_options[:start_number] - 1 : 0
+        }
 
-        collection = @client[@repository_name].find({}, opts)
-
-        results = []
-
-        collection.each do |document|
-          results.push(translate_from_mongo(document, Dashboard::Entities::Run))
-        end
-
-        results
-      end
-
-      def get_runs_by_name(name)
-        raise ('Name must be a non-empty/nil String.') if name.nil? || name.empty? || !name.is_a?(String)
-
-        collection = @client[@repository_name].find(:nm => name)
-
-        results = []
-
-        collection.each do |document|
-          results.push(translate_from_mongo(document, Dashboard::Entities::Run))
-        end
-
-        results
-      end
-
-      def get_runs_by_feature_name(name)
-        raise ('Name must be a non-empty/nil String.') if name.nil? || name.empty? || !name.is_a?(String)
-
-        collection = @client[@repository_name].find(:ftr => name)
+        collection = @client[@repository_name].find(@filter_options.each{|key, val| @filter_options[key] = /#{val.gsub(' ', '\s')}/i}, opts)
 
         results = []
 
