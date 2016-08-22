@@ -14,6 +14,8 @@ module Dashboard
             :count => 25
         }
 
+        # ToDo: Find a way to do a mapping in the run repository, so I don't need to know the Mongo field keys to
+        #    create this filter.
         @filter_options = {
             :ftr => nil,
             :nm => nil
