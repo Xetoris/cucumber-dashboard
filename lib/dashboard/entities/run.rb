@@ -14,6 +14,7 @@ module Dashboard
         {
             :id => @id,
             :name => @name,
+            :created => @create_date,
             :feature => @feature,
             :status => @status,
             :tags => @tags,
