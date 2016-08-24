@@ -6,6 +6,13 @@ module Dashboard
     class Run < BaseEntity
       attr_accessor :name, :feature, :status, :tags, :steps
 
+      def initialize
+        @tags = []
+        @steps = []
+      end
+
+      #region JSON Support
+
       def self.json_create(o)
         new(*o['data'])
       end
@@ -21,6 +28,8 @@ module Dashboard
             :steps => @steps.collect{|x| x.to_hash}
         }.to_json(*a)
       end
+
+      #endregion
     end
 
     # Represents a Cucumber Step
@@ -30,6 +39,8 @@ module Dashboard
       def ==(other)
         @name == other.name && @location == other.location && @status == other.status && @exception == other.exception
       end
+
+      #region JSON Support
 
       def to_hash
         {
@@ -43,6 +54,8 @@ module Dashboard
       def to_json(*a)
         to_hash.to_json(*a)
       end
+
+      #endregion
     end
   end
 end

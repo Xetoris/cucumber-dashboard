@@ -22,7 +22,7 @@ module Api::Controllers::Runs
             :ftr => params[:feature],
             :nm => params[:name]}))
       else
-        self.body = errors
+        status 400, params.errors
       end
     end
   end

@@ -152,8 +152,10 @@ module Dashboard
 
         model[:stps] = []
 
-        run.steps.each do |step|
-          model[:stps].push(step_to_mongo(step))
+        unless run.steps.nil?
+          run.steps.each do |step|
+            model[:stps].push(step_to_mongo(step))
+          end
         end
 
         model

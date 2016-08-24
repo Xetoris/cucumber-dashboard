@@ -5,4 +5,5 @@
 #get '/executions', ''
 get '/', to: -> (env){[200, {}, ['API']]}
 get '/runs', to: 'runs#collection'
+post '/runs', to: 'runs#create'
 get '/runs/:id', to: 'runs#get'
