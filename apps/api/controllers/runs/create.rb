@@ -1,26 +1,13 @@
 require 'multi_json'
 require_relative '../../../../lib/dashboard/repositories/run_repository'
 require_relative '../../../../lib/dashboard/entities/run'
+require_relative '../../validators/run_validator'
 
 module Api::Controllers::Runs
   class Create
     include Api::Action
 
-    params do
-      required(:feature).filled(:str?, format?: /^[a-zA-Z0-9\s\/_-]*$/)
-      required(:name).filled(:str?, format?: /^[a-zA-Z0-9\s\/_-]*$/)
-      required(:status).filled(:str?, format?: /^(skipped|success|failed)$/)
-      optional(:tags).each(:str?, format?:/^@[a-zA-Z0-9_-]*$/)
-      optional(:steps).filled(:array?, each {
-        required(:name).filled(:str?)
-        required(:location).filled(:str?)
-        required(:status).filled(:str?, format?: /^(skipped|success|failed)$/)
-        optional(:exception).schema do
-          required(:message).filled(:str?)
-          optional(:backtrace).each(:str?)
-        end
-      })
-    end
+    params RunValidator
 
     def call(params)
       if params.valid?
