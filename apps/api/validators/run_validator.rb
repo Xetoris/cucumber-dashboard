@@ -8,8 +8,12 @@ class RunValidator < Api::Action::Params
   params do
     required(:feature).filled(:str?, format?: /^[a-zA-Z0-9\s\/_-]*$/)
     required(:name).filled(:str?, format?: /^[a-zA-Z0-9\s\/_-]*$/)
-    required(:status).filled(:str?, format?: /^(skipped|success|failed)$/)
-    optional(:tags).each(:str?, format?:/^@[a-zA-Z0-9_-]*$/)
-    optional(:steps).each(schema: StepValidator)
+    required(:status).filled(:str?, format?: /^(skipped|passed|failed)$/)
+    optional(:tags).filled(:array?) do |opts|
+      opts.each(:str?, format?:/^@[a-zA-Z0-9_-]*$/)
+    end
+    optional(:steps).filled(:array?) do |opts|
+        opts.each(schema: StepValidator)
+    end
   end
 end
