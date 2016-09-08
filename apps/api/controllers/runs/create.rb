@@ -16,6 +16,7 @@ module Api::Controllers::Runs
         run.name = params[:name]
         run.feature = params[:feature]
         run.status = params[:status]
+        run.regression_tag = params[:regression_tag]
         run.create_date = Time.now.utc
 
         unless params[:tags].nil?

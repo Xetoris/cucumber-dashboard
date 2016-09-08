@@ -4,7 +4,7 @@ module Dashboard
   module Entities
     # Represents a single Cucumber Scenario run.
     class Run < BaseEntity
-      attr_accessor :name, :feature, :status, :tags, :steps
+      attr_accessor :name, :feature, :status, :regression_tag, :tags, :steps
 
       def initialize
         @tags = []
@@ -21,7 +21,8 @@ module Dashboard
         {
             :id => @id,
             :name => @name,
-            :created => @create_date,
+            :create_date => @create_date,
+            :regression_tag => @regression_tag,
             :feature => @feature,
             :status => @status,
             :tags => @tags,

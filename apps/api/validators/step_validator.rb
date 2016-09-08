@@ -1,9 +1,8 @@
 require 'hanami-validations'
+require 'hanami/action/params'
 
-class ExceptionValidator
-  include Hanami::Validations
-
-  validations do
+class ExceptionValidator < Api::Action::Params
+  params do
     required(:message).filled(:str?)
     optional(:backtrace).filled(:array?) do |opts|
       opts.each(:str?)
@@ -11,14 +10,14 @@ class ExceptionValidator
   end
 end
 
-class StepValidator
-  include Hanami::Validations
+class StepValidator < Api::Action::Params
 
-  validations do
+  params do
     required(:name).filled(:str?)
     required(:location).filled(:str?)
-    required(:status).filled(:str?, format?: /^(skipped|success|failed)$/)
-    optional(:exception).schema(ExceptionValidator)
+    required(:status).filled(:str?, format?:(/^(skipped|success|failed)$/))
+    optional(:exception).filled(:array?) do |opts|
+      opts.each(schema: ExceptionValidator)
+    end
   end
 end
-

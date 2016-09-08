@@ -15,6 +15,7 @@ RSpec.describe Dashboard::Repositories::RunRepository do
     step_model.location = '/some/place/here'
     step_model.status = 'passed'
 
+
     model = Dashboard::Entities::Run.new
 
     model.create_date = Time.now
@@ -23,6 +24,7 @@ RSpec.describe Dashboard::Repositories::RunRepository do
     model.status = 'passed'
     model.tags = %w(@tag1 @tag_test)
     model.steps = [step_model]
+    model.regression_tag = 'jenkins-regression.qa.some.suite-12'
 
     result = @client.add_run(model)
 
@@ -49,6 +51,7 @@ RSpec.describe Dashboard::Repositories::RunRepository do
       model.status = 'passed'
       model.tags = ["@#{Faker::Company.profession.gsub(' ', '_')}"]
       model.steps = [step_model]
+      model.regression_tag = "jenkins-regression.qa.#{ Faker::Company.buzzword.downcase }.suite-#{ Random.new.rand(1..99) }"
 
       @client.add_run(model)
 
@@ -63,6 +66,7 @@ RSpec.describe Dashboard::Repositories::RunRepository do
       expect(retrieved.id).to eq(@stored_model.id)
       expect(retrieved.name).to eq(@stored_model.name)
       expect(retrieved.feature).to eq(@stored_model.feature)
+      expect(retrieved.regression_tag).to eq(@stored_model.regression_tag)
       expect(retrieved.status).to eq(@stored_model.status)
       expect(retrieved.tags).to eq(@stored_model.tags)
       expect(retrieved.steps).to eq(@stored_model.steps)
@@ -103,6 +107,13 @@ RSpec.describe Dashboard::Repositories::RunRepository do
 
     it 'can search by feature name' do
       retrieved = @client.get_runs(filter_options: {:ftr => @stored_model.feature})
+
+      expect(retrieved.count).to be > 0
+      expect(retrieved.find{ |run| run.id == @stored_model.id }).to_not be nil
+    end
+
+    it 'can search by regression tag' do
+      retrieved = @client.get_runs(filter_options: { :rtg => @stored_model.regression_tag })
 
       expect(retrieved.count).to be > 0
       expect(retrieved.find{ |run| run.id == @stored_model.id }).to_not be nil

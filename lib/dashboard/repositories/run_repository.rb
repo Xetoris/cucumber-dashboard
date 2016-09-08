@@ -18,7 +18,8 @@ module Dashboard
         #    create this filter.
         @filter_options = {
             :ftr => nil,
-            :nm => nil
+            :nm => nil,
+            :rtg => nil
         }
       end
 
@@ -45,18 +46,18 @@ module Dashboard
       end
 
       def get_runs(sort_options: {}, filter_options: {})
-        @sort_options.merge!(sort_options){ |key, o_val, n_val| n_val.nil? ? o_val : n_val }
-        @filter_options.merge!(filter_options)
+        sorts = @sort_options.merge(sort_options){ |key, o_val, n_val| n_val.nil? ? o_val : n_val }
+        filters = @filter_options.merge(filter_options)
 
-        @filter_options.delete_if{ |key, value| value.nil? }
+        filters.delete_if{ |key, value| value.nil? }
 
         opts = {
-            :sort => { ctd: @sort_options[:direction] == 'desc' ? -1 : 1 },
-            :limit => @sort_options[:count],
-            :skip => @sort_options[:start_number] > 0 ? @sort_options[:start_number] - 1 : 0
+            :sort => { ctd: sorts[:direction] == 'desc' ? -1 : 1 },
+            :limit => sorts[:count],
+            :skip => sorts[:start_number] > 0 ? sorts[:start_number] - 1 : 0
         }
 
-        collection = @client[@repository_name].find(@filter_options.each{|key, val| @filter_options[key] = /#{val.gsub(' ', '\s')}/i}, opts)
+        collection = @client[@repository_name].find(filters.each{|key, val|filters[key] = /#{val.gsub(' ', '\s')}/i}, opts)
 
         results = []
 
@@ -74,6 +75,7 @@ module Dashboard
       def get_run_names
         @client[@repository_name].find.distinct(:nm)
       end
+
 
       private
 
@@ -108,6 +110,7 @@ module Dashboard
 
         model.id = data[:_id].to_s
         model.create_date = data[:ctd]
+        model.regression_tag = data[:rtg]
         model.name = data[:nm]
         model.feature = data[:ftr]
         model.status = data[:sts]
@@ -143,6 +146,7 @@ module Dashboard
         model = {
                   :_id => run.id,
                   :ctd => run.create_date.utc,
+                  :rtg => run.regression_tag,
                   :nm => run.name,
                   :ftr => run.feature,
                   :sts => run.status

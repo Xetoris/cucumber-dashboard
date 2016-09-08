@@ -8,6 +8,7 @@ module Api::Controllers::Runs
     params do
       optional(:feature).filled(:str?, format?: /^[a-zA-Z0-9\s\/_-]*$/)
       optional(:name).filled(:str?, format?: /^[a-zA-Z0-9\s\/_-]*$/)
+      optional(:regression_tag).filled(:str?)
       optional(:sort_direction).filled(:str?, format?:/^(desc|asc)$/)
       optional(:start_number).filled(:int?)
       optional(:count).filled(:int?)
@@ -20,7 +21,9 @@ module Api::Controllers::Runs
             :direction => params[:sort_direction],
             :start_number => params[:start_number]}, filter_options: {
             :ftr => params[:feature],
-            :nm => params[:name]}))
+            :nm => params[:name],
+            :rtg => params[:regression_tag]
+        }))
       else
         status 400, params.errors
       end

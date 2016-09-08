@@ -47,7 +47,7 @@ module Api
       # Argument: An object coercible to integer, default to 80 if the scheme is http and 443 if it's https
       # This SHOULD be configured only in case the application listens to that non standard ports
       #
-       port 3085
+      # port 3085
 
       # Enable cookies
       # Argument: boolean to toggle the feature

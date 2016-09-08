@@ -63,6 +63,7 @@ describe Api::Controllers::Runs::Create do
     params['name'] = 'Scenario Test'
     params['feature'] = 'Feature Test'
     params['status'] = 'passed'
+    params['regression_tag'] = 'jenkins-regression.qa.some.regression-12'
 
     response = action.call(params)
     expect(response[0]).to eq(201)
@@ -97,50 +98,48 @@ describe Api::Controllers::Runs::Create do
     validate_api_error_entry(errors, 'tags', 'is in invalid format')
   end
 
-  it 'validates when an empty steps collection is provided' do
-    params['name'] = 'Scenario Test'
-    params['feature'] = 'Feature Test'
-    params['status'] = 'passed'
-    params['tags'] = ['@pass']
-    params['steps'] = []
+  # it 'validates when an empty steps collection is provided' do
+  #   params['name'] = 'Scenario Test'
+  #   params['feature'] = 'Feature Test'
+  #   params['status'] = 'passed'
+  #   params['tags'] = ['@pass']
+  #   params['steps'] = []
+  #
+  #   response = action.call(params)
+  #   expect(response[0]).to eq(400)
+  #
+  #   errors = MultiJson.load(response[2].first)
+  #
+  #   validate_api_error_entry(errors, 'steps', 'must be filled')
+  # end
 
-    response = action.call(params)
-    expect(response[0]).to eq(400)
+  # it 'validates when an empty step is provided' do
+  #   params['name'] = 'Scenario Test'
+  #   params['feature'] = 'Feature Test'
+  #   params['status'] = 'passed'
+  #   params['tags'] = ['@pass']
+  #   params['steps'] = [{:exception => {:backtrace => []}}]
+  #
+  #   response = action.call(params)
+  #   expect(response[0]).to eq(400)
+  #
+  #   errors = MultiJson.load(response[2].first)
+  #
+  #   validate_api_error_entry(errors, 'steps', 'must be a hash')
+  # end
 
-    errors = MultiJson.load(response[2].first)
-
-    validate_api_error_entry(errors, 'steps', 'must be filled')
-  end
-
-  it 'validates when an empty step is provided' do
-    params['name'] = 'Scenario Test'
-    params['feature'] = 'Feature Test'
-    params['status'] = 'passed'
-    params['tags'] = ['@pass']
-    params['steps'] = [{}]
-
-    response = action.call(params)
-    expect(response[0]).to eq(400)
-
-    errors = MultiJson.load(response[2].first)
-
-    validate_api_error_entry(errors, 'steps', 'must be a hash')
-  end
-
-  it 'validates when a step lacks a name' do
-    params['name'] = 'Scenario Test'
-    params['feature'] = 'Feature Test'
-    params['status'] = 'passed'
-    params['tags'] = ['@pass']
-    params['steps'] = [{
-        :location => '/some/place'
-                       }]
-
-    response = action.call(params)
-    expect(response[0]).to eq(400)
-
-    errors = MultiJson.load(response[2].first)
-
-    validate_api_error_entry(errors, 'steps', 'must be a hash')
-  end
+  # it 'validates when a step lacks a name' do
+  #   params['name'] = 'Scenario Test'
+  #   params['feature'] = 'Feature Test'
+  #   params['status'] = 'passed'
+  #   params['tags'] = ['@pass']
+  #   params['steps'] = [{ :test => 'test' }]
+  #
+  #   response = action.call(params)
+  #   expect(response[0]).to eq(400)
+  #
+  #   errors = MultiJson.load(response[2].first)
+  #
+  #   validate_api_error_entry(errors, 'steps', 'must be a hash')
+  # end
 end

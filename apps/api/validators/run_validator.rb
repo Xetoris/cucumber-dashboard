@@ -3,7 +3,6 @@ require 'hanami/action/params'
 require_relative 'step_validator'
 
 class RunValidator < Api::Action::Params
-  include Hanami::Validations
 
   params do
     required(:feature).filled(:str?, format?: /^[a-zA-Z0-9\s\/_-]*$/)
@@ -12,8 +11,8 @@ class RunValidator < Api::Action::Params
     optional(:tags).filled(:array?) do |opts|
       opts.each(:str?, format?:/^@[a-zA-Z0-9_-]*$/)
     end
-    optional(:steps).filled(:array?) do |opts|
-        opts.each(schema: StepValidator)
-    end
+    #optional(:steps).filled(:array?) do |opts|
+    #  opts.each(schema: StepValidator)
+    #end
   end
 end
