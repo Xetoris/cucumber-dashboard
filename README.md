@@ -1,10 +1,18 @@
-# cucumber-dashboard
-A dashboard for cucumber test results that utilizes a special cucumber formatter output.
+Revitalizing this old project.
 
-# Status: Work In Progress
+# Cucumber Dashboard
 
-# Goals:
-1) Reads data from data source (Mongo, json, etc)
-2) Presents the data in a testing dashboard.
-3) Dashboard tries to stay clean while presenting as much data as possible.
-4) Uses the Hanami architecture. (http://hanamirb.org/)
+## Goal
+To provide a solution for running Cucumber in parallel, recording and presenting the results.
+
+## Initial Design
+Library will consist of an API and some sort of a web front end. 
+One-two other projects will be added to support the queue functionality for parallelizing Cucumber runs.
+
+## Utilized Technologies
+Hanami (https://github.com/hanami/hanami)
+MongoDB (https://www.mongodb.com/)
+
+My hopes is that this will be simple enough that could share around or act as an example for those considering ways of solving similar problems.
+
+###Work In Progress
