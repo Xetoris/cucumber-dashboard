@@ -14,6 +14,7 @@ Field Name    | Field Description
 ---           | ---               
 Feature Name  | Name of the containing feature.
 File Name     | Name of the file.
+Id            | Entity Id
 Name          | Name of the Scenario.
 Relative Path | Path to the feature file relative to the features/ dir.
 Step Count    | Number of steps in the scenario.
