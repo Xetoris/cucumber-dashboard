@@ -23,7 +23,7 @@ module CucumberDashboard
         end
 
         # @return [Hash] Returns a JSON'able hash representing the entity.
-        def to_json
+        def as_json
           json = { Count: @count,
                    End: @end,
                    Sort: @sort,
@@ -31,7 +31,7 @@ module CucumberDashboard
 
           array = []
           @list.each do |entity|
-            array.push(entity.to_json) if entity.respond_to?(:to_json)
+            array.push(entity.as_json) if entity.respond_to?(:as_json)
           end
 
           json[:List] = array

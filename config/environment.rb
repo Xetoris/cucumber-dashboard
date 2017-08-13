@@ -2,7 +2,7 @@ require 'bundler/setup'
 require 'hanami/setup'
 require 'multi_json'
 #require 'hanami/model'
-#require_relative '../lib/cucumber_dashboard'
+require_relative '../lib/cucumber_dashboard'
 require_relative '../apps/api/application'
 require_relative '../apps/web/application'
 

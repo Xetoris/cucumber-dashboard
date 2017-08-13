@@ -11,6 +11,7 @@ end
 group :test do
   gem 'rspec'
   gem 'capybara'
+  gem 'faker'
 end
 
 group :production do

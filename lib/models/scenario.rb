@@ -25,7 +25,7 @@ module CucumberDashboard
       end
 
       # @return [Hash] A JSON'able hash.
-      def to_json
+      def as_json
         { FeatureName: @feature_name,
           FileName: @file_name,
           Name: @name,
@@ -44,12 +44,12 @@ module CucumberDashboard
           json = MultiJson.load(json_string)
           model = new
 
-          model.feature_name = json[:FeatureName]
-          model.file_name = json[:FileName]
-          model.name = json[:Name]
-          model.relative_path = json[:RelativePath]
-          model.step_count = json[:StepCount]
-          model.tags.push(json[:Tags])
+          model.feature_name = json['FeatureName']
+          model.file_name = json['FileName']
+          model.name = json['Name']
+          model.relative_path = json['RelativePath']
+          model.step_count = json['StepCount']
+          model.tags.concat(json['Tags'])
 
           model
         end
