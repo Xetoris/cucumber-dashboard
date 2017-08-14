@@ -14,6 +14,9 @@ module CucumberDashboard
       # @return [RunError, Null] The error information.
       attr_accessor :error
 
+      # @return [String] Entity id.
+      attr_accessor :id
+
       # @return [String] Id of the scenario run.
       attr_accessor :scenario_id
 
@@ -30,6 +33,7 @@ module CucumberDashboard
       def as_json
         json = { Duration: @duration,
                  EndTime: @end_time.to_s,
+                 Id: @id,
                  ScenarioId: @scenario_id,
                  StartTime: @start_time.to_s,
                  Status: @status,
@@ -55,6 +59,7 @@ module CucumberDashboard
         def from_json(json_string)
           json = MultiJson.load(json_string)
           model = new
+          model.id = json['Id'] if json.key?('Id')
           model.scenario_id = json['ScenarioId']
           model.status = json['Status']
 

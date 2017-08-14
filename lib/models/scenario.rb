@@ -8,6 +8,9 @@ module CucumberDashboard
       # @return [String] Name of the physical file containing the scenario.
       attr_accessor :file_name
 
+      # @return [String] Entity id.
+      attr_accessor :id
+
       # @return [String] Name of the Scenario.
       attr_accessor :name
 
@@ -28,6 +31,7 @@ module CucumberDashboard
       def as_json
         { FeatureName: @feature_name,
           FileName: @file_name,
+          Id: @id,
           Name: @name,
           RelativePath: @relative_path,
           StepCount: @step_count,
@@ -46,6 +50,7 @@ module CucumberDashboard
 
           model.feature_name = json['FeatureName']
           model.file_name = json['FileName']
+          model.id = json['Id'] if json.key?('Id')
           model.name = json['Name']
           model.relative_path = json['RelativePath']
           model.step_count = json['StepCount']
